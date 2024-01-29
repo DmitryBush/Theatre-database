@@ -19,7 +19,8 @@ namespace TheatreDB
         {
             InitializeComponent();
             db.ConnectDB();
-            LoadEventsScreen();
+            //LoadEventsScreen();
+            TestButtons();
         }
 
         private async void LoadEventsScreen()
@@ -42,6 +43,25 @@ namespace TheatreDB
             }
         }
 
+        private void TestButtons()
+        {
+            int initX = EventButton.defPosX;
+            int initY = EventButton.defPosY;
+            for (int i = 0; i < 2; i++)
+            {
+                for(int j = 0; j < 3; j++)
+                {
+                    EventButton button = new EventButton();
+                    button.SetPanelLocation(initX + 397 * j,
+                        initY);
+                    button.SetName("Test" + j);
+                    button.SetPrice(1000 * j);
+                    Controls.Add(button.GetPanel());
+                }
+                initY += 270;
+            }
+        }
+
         private void label1_Click(object sender, EventArgs e)
         {
         }
@@ -58,6 +78,11 @@ namespace TheatreDB
 
         private void theatre_Load(object sender, EventArgs e)
         {
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
