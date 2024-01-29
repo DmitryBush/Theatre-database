@@ -13,6 +13,12 @@ namespace TheatreDB
         private static readonly string connectStr
                 = "Host=localhost;port=5432;Username=guest;Password=guest;Database=theatre";
         private static NpgsqlConnection conn = new NpgsqlConnection(connectStr);
+
+        ~DataBase()
+        {
+            DisconnectDBAsync();
+        }
+
         public void ConnectDB()
         {
             if (conn.State != ConnectionState.Open)

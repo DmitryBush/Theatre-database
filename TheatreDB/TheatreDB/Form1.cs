@@ -19,27 +19,47 @@ namespace TheatreDB
         {
             InitializeComponent();
             db.ConnectDB();
-            //LoadEventsScreen();
-            TestButtons();
+            LoadEventsScreen();
+            //TestButtons();
         }
 
         private async void LoadEventsScreen()
         {
+
+            DataTable dt = new DataTable();
             try
             {
-                using (var command = new NpgsqlCommand("select name from events", db.GetConnection()))
+                using (var command = new NpgsqlCommand("select * from events", db.GetConnection()))
                 using (var reader = await command.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        var someFieldValue = reader["name"];
-                        label1.Text = (string)someFieldValue;
-                    }
-                }
+                    dt.Load(reader);
             }
             catch (Exception)
             {
                 throw;
+            }
+            
+            int rowCountElem = 0;
+            int initX = EventButton.defPosX;
+            int initY = EventButton.defPosY;
+            foreach (DataRow row in dt.Rows)
+            {
+                //label1.Text = (string)row["name"];
+                EventButton button = new EventButton();
+                button.SetPanelLocation(initX + 397 * rowCountElem, //rowCountElem,
+                    initY);
+                button.SetName((string)row["name"]);
+                button.SetEvent((DateTime)row["date_event"]);
+                button.SetPrice((int)row["initial_price"]);
+                button.SetPicture(
+                    "https://files.libertycity.net/download/gtasa_newskins/fulls/2020-12/dzhonni-silverkhend-iz-cyberpunk-2077_1686006013_124853.jpg");
+                Controls.Add(button.GetPanel());
+                rowCountElem++;
+
+                if (rowCountElem >= 3)
+                {
+                    initY += 270;
+                    rowCountElem = 0;
+                }
             }
         }
 
@@ -56,6 +76,8 @@ namespace TheatreDB
                         initY);
                     button.SetName("Test" + j);
                     button.SetPrice(1000 * j);
+                    button.SetPicture(
+                        "https://files.libertycity.net/download/gtasa_newskins/fulls/2020-12/dzhonni-silverkhend-iz-cyberpunk-2077_1686006013_124853.jpg");
                     Controls.Add(button.GetPanel());
                 }
                 initY += 270;

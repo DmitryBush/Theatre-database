@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,11 +76,82 @@ namespace TheatreDB
         public void SetName(string name)
         { nameEvent.Text = name; }
 
+        public void SetEvent(DateTime reader)
+        {
+            dateEvent.Text = $"{DefineDayOfWeek(reader.DayOfWeek)}, {reader.Day} " +
+                $"{DefineMonth(reader.Month)} {FormattingClock(reader.Hour)}:" +
+                $"{FormattingClock(reader.Minute)}";
+        }
+
+        private string DefineDayOfWeek(DayOfWeek day)
+        {
+            switch (day)
+            {
+                case DayOfWeek.Monday:
+                    return "Пн";
+                case DayOfWeek.Tuesday:
+                    return "Вт";
+                case DayOfWeek.Wednesday:
+                    return "Ср";
+                case DayOfWeek.Thursday:
+                    return "Чт";
+                case DayOfWeek.Friday:
+                    return "Пт";
+                case DayOfWeek.Saturday:
+                    return "Сб";
+                case DayOfWeek.Sunday:
+                    return "Вс";
+                default:
+                    return "NaN";
+            }
+        }
+
+        private string DefineMonth(int month)
+        {
+            switch (month)
+            {
+                case 1:
+                    return "Янв";
+                case 2:
+                    return "Фев";
+                case 3:
+                    return "Март";
+                case 4:
+                    return "Апр";
+                case 5:
+                    return "Май";
+                case 6:
+                    return "Июнь";
+                case 7:
+                    return "Июль";
+                case 8:
+                    return "Авг";
+                case 9:
+                    return "Сент";
+                case 10:
+                    return "Окт";
+                case 11:
+                    return "Нояб";
+                case 12:
+                    return "Дек";
+                default:
+                    return "NaN";
+            }
+        }
+
+        private string FormattingClock(int clock)
+        {
+            if (clock < 10)
+                return $"0{clock}";
+            else
+                return $"{clock}";
+        }
+
         public void SetPrice(int price)
         { initPrice.Text = $"От {price} р."; }
 
-        public void SetPicture(string path)
-        { picEvent.ImageLocation = path; }
+        public void SetPicture(string URL)
+        { picEvent.LoadAsync(URL); }
 
         public Panel GetPanel() { return panel; }
 
