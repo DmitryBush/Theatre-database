@@ -29,7 +29,10 @@ namespace TheatreDB
             DataTable dt = new DataTable();
             try
             {
-                using (var command = new NpgsqlCommand("select * from events", db.GetConnection()))
+                using (var command = 
+                    new NpgsqlCommand("select events.id, name, date_event, initial_price, " +
+                    "url from events left join events_photo on events.id = events_photo.event_id;", 
+                    db.GetConnection()))
                 using (var reader = await command.ExecuteReaderAsync())
                     dt.Load(reader);
             }
@@ -50,8 +53,7 @@ namespace TheatreDB
                 button.SetName((string)row["name"]);
                 button.SetEvent((DateTime)row["date_event"]);
                 button.SetPrice((int)row["initial_price"]);
-                button.SetPicture(
-                    "https://files.libertycity.net/download/gtasa_newskins/fulls/2020-12/dzhonni-silverkhend-iz-cyberpunk-2077_1686006013_124853.jpg");
+                button.SetPicture((string)row["url"]);
                 Controls.Add(button.GetPanel());
                 rowCountElem++;
 
