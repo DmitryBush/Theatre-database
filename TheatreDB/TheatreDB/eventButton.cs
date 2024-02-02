@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace TheatreDB
 {
     internal class EventButton
     {
+        private static int copyCount = 0;
         public const int defPosX = 21, defPosY = 122;
         private PictureBox picEvent = new PictureBox();
         private Label nameEvent, dateEvent, initPrice;
@@ -27,7 +29,7 @@ namespace TheatreDB
                 new System.Drawing.Font("Segoe UI Semilight", 18F, System.Drawing.FontStyle.Regular, 
                 System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             nameEvent.Location = new System.Drawing.Point(3, 136);
-            nameEvent.Name = "label1";
+            nameEvent.Name = $"name{copyCount}";
             nameEvent.Size = new System.Drawing.Size(138, 32);
             nameEvent.TabIndex = 1;
             nameEvent.Text = "Name Event";
@@ -38,7 +40,7 @@ namespace TheatreDB
                 new System.Drawing.Font("Segoe UI Semilight", 14F, System.Drawing.FontStyle.Regular, 
                 System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             initPrice.Location = new System.Drawing.Point(213, 174);
-            initPrice.Name = "label2";
+            initPrice.Name = $"price{copyCount}";
             initPrice.Size = new System.Drawing.Size(95, 25);
             initPrice.TabIndex = 2;
             initPrice.Text = "От 1000 р.";
@@ -47,7 +49,7 @@ namespace TheatreDB
             dateEvent.AutoSize = true;
             dateEvent.Font = new System.Drawing.Font("Segoe UI Semilight", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dateEvent.Location = new System.Drawing.Point(4, 174);
-            dateEvent.Name = "label9";
+            dateEvent.Name = $"date{copyCount}";
             dateEvent.Size = new System.Drawing.Size(148, 25);
             dateEvent.TabIndex = 3;
             dateEvent.Text = "Пн, 29 Янв 17:00";
@@ -56,7 +58,7 @@ namespace TheatreDB
             picEvent.BackColor = System.Drawing.Color.Gainsboro;
             picEvent.Location = new System.Drawing.Point(0, 0);
             picEvent.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            picEvent.Name = "pictureBox1";
+            picEvent.Name = $"pictureBox{copyCount}";
             picEvent.Size = new System.Drawing.Size(311, 133);
             picEvent.TabIndex = 0;
             picEvent.TabStop = false;
@@ -68,9 +70,72 @@ namespace TheatreDB
             panel.Controls.Add(dateEvent);
             panel.Cursor = System.Windows.Forms.Cursors.Hand;
             panel.Location = new System.Drawing.Point(21, 122);
-            panel.Name = "panel1";
+            panel.Name = $"panel{copyCount}";
             panel.Size = new System.Drawing.Size(311, 211);
             panel.TabIndex = 3;
+
+            copyCount++;
+        }
+
+        public EventButton(DataRow row)
+        {
+            nameEvent = new Label();
+            dateEvent = new Label();
+            initPrice = new Label();
+
+            // Name of Event init
+            nameEvent.AutoSize = true;
+            nameEvent.Font =
+                new System.Drawing.Font("Segoe UI Semilight", 18F, System.Drawing.FontStyle.Regular,
+                System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            nameEvent.Location = new System.Drawing.Point(3, 136);
+            nameEvent.Name = $"name{copyCount}";
+            nameEvent.Size = new System.Drawing.Size(138, 32);
+            nameEvent.TabIndex = 1;
+            SetName((string)row["name"]);
+
+            // Price text
+            initPrice.AutoSize = true;
+            initPrice.Font =
+                new System.Drawing.Font("Segoe UI Semilight", 14F, System.Drawing.FontStyle.Regular,
+                System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            initPrice.Location = new System.Drawing.Point(213, 174);
+            initPrice.Name = $"price{copyCount}";
+            initPrice.Size = new System.Drawing.Size(95, 25);
+            initPrice.TabIndex = 2;
+            SetPrice((int)row["initial_price"]);
+
+            // Date init
+            dateEvent.AutoSize = true;
+            dateEvent.Font = new System.Drawing.Font("Segoe UI Semilight", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dateEvent.Location = new System.Drawing.Point(4, 174);
+            dateEvent.Name = $"date{copyCount}";
+            dateEvent.Size = new System.Drawing.Size(148, 25);
+            dateEvent.TabIndex = 3;
+            SetEvent((DateTime)row["date_event"]);
+
+            // Picture of event
+            picEvent.BackColor = System.Drawing.Color.Gainsboro;
+            picEvent.Location = new System.Drawing.Point(0, 0);
+            picEvent.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            picEvent.Name = $"pictureBox{copyCount}";
+            picEvent.Size = new System.Drawing.Size(311, 133);
+            picEvent.TabIndex = 0;
+            picEvent.TabStop = false;
+            SetPicture((string)row["url"]);
+
+            // Panel controll
+            panel.Controls.Add(nameEvent);
+            panel.Controls.Add(initPrice);
+            panel.Controls.Add(picEvent);
+            panel.Controls.Add(dateEvent);
+            panel.Cursor = System.Windows.Forms.Cursors.Hand;
+            panel.Location = new System.Drawing.Point(21, 122);
+            panel.Name = $"panel{copyCount}";
+            panel.Size = new System.Drawing.Size(311, 211);
+            panel.TabIndex = 3;
+
+            copyCount++;
         }
 
         public void SetName(string name)

@@ -14,15 +14,15 @@ namespace TheatreDB
 {
     public partial class theatre : Form
     {
-        private static DataBase db = new DataBase();
+        private static readonly DataBase db = new DataBase();
         public theatre()
         {
             InitializeComponent();
             db.ConnectDB();
             LoadEventsScreen();
-            //TestButtons();
         }
 
+        // Asynchronous element loading
         private async void LoadEventsScreen()
         {
 
@@ -31,7 +31,8 @@ namespace TheatreDB
             {
                 using (var command = 
                     new NpgsqlCommand("select events.id, name, date_event, initial_price, " +
-                    "url from events left join events_photo on events.id = events_photo.event_id;", 
+                    "url from events left join events_photo on events.id = events_photo.event_id " +
+                    "order by date_event asc;", 
                     db.GetConnection()))
                 using (var reader = await command.ExecuteReaderAsync())
                     dt.Load(reader);
@@ -46,14 +47,9 @@ namespace TheatreDB
             int initY = EventButton.defPosY;
             foreach (DataRow row in dt.Rows)
             {
-                //label1.Text = (string)row["name"];
-                EventButton button = new EventButton();
-                button.SetPanelLocation(initX + 397 * rowCountElem, //rowCountElem,
+                EventButton button = new EventButton(row);
+                button.SetPanelLocation(initX + (397 * rowCountElem),
                     initY);
-                button.SetName((string)row["name"]);
-                button.SetEvent((DateTime)row["date_event"]);
-                button.SetPrice((int)row["initial_price"]);
-                button.SetPicture((string)row["url"]);
                 Controls.Add(button.GetPanel());
                 rowCountElem++;
 
@@ -65,46 +61,12 @@ namespace TheatreDB
             }
         }
 
-        private void TestButtons()
-        {
-            int initX = EventButton.defPosX;
-            int initY = EventButton.defPosY;
-            for (int i = 0; i < 2; i++)
-            {
-                for(int j = 0; j < 3; j++)
-                {
-                    EventButton button = new EventButton();
-                    button.SetPanelLocation(initX + 397 * j,
-                        initY);
-                    button.SetName("Test" + j);
-                    button.SetPrice(1000 * j);
-                    button.SetPicture(
-                        "https://files.libertycity.net/download/gtasa_newskins/fulls/2020-12/dzhonni-silverkhend-iz-cyberpunk-2077_1686006013_124853.jpg");
-                    Controls.Add(button.GetPanel());
-                }
-                initY += 270;
-            }
-        }
-
         private void label1_Click(object sender, EventArgs e)
         {
-        }
-
-        private void label1_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
+            
         }
 
         private void theatre_Load(object sender, EventArgs e)
-        {
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
         }
